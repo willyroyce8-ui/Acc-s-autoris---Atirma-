@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès Réservé - Atirma</title>
+    <style>
+        body {
+            margin: 0; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #ffeef2; font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white; padding: 30px; border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.2);
+            text-align: center; width: 320px; border: 2px solid #ffcad4;
+            position: relative;
+        }
+
+        /* Animation Nounours Beau Gosse 😏 */
+        .nounours { 
+            font-size: 70px; margin-bottom: 15px; display: block; 
+            display: inline-block;
+            animation: beauGosse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes beauGosse {
+            0% { transform: rotate(-5deg) translateY(0) scale(1); }
+            25% { transform: rotate(5deg) translateY(-8px) scale(1.1); } /* Il se redresse */
+            50% { transform: rotate(-5deg) translateY(0) scale(1); }
+            75% { transform: rotate(5deg) translateY(-8px) scale(1.1); }
+            100% { transform: rotate(-5deg) translateY(0) scale(1); }
+        }
+        
+        h2 { color: #ff4d6d; font-size: 20px; margin-bottom: 25px; line-height: 1.4; }
+
+        .btns { display: flex; justify-content: center; gap: 20px; min-height: 50px; }
+        button, .final-link {
+            padding: 12px 25px; border-radius: 50px; border: none;
+            cursor: pointer; font-weight: bold; font-size: 16px;
+            transition: all 0.3s ease; text-decoration: none;
+        }
+
+        #btnOui { background-color: #ff4d6d; color: white; }
+        #btnNon { background-color: #f8f9fa; color: #adb5bd; }
+
+        #passArea { display: none; margin-top: 20px; }
+        input {
+            width: 85%; padding: 12px; border-radius: 12px;
+            border: 2px solid #ffcad4; outline: none; text-align: center;
+            margin-bottom: 15px; font-size: 16px;
+        }
+        
+        #btnValider { background: #ff4d6d; color: white; width: 100%; }
+
+        #driveLink { 
+            display: none; background: #28a745; color: white; 
+            width: fit-content; margin: 0 auto; 
+            padding: 10px 25px; box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .error { color: #ff4d6d; font-size: 13px; display: none; margin-bottom: 10px; }
+
+        .confetti {
+            position: absolute; width: 8px; height: 8px;
+            border-radius: 50%; pointer-events: none;
+            animation: fall linear forwards; z-index: 1000;
+        }
+        @keyframes fall { to { transform: translateY(100vh) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <span class="nounours">🧸</span>
+        <h2 id="question">C'est notre petit jardin secret... Veux-tu y accéder ?</h2>
+        
+        <div class="btns" id="btnGroup">
+            <button id="btnOui">Oui !</button>
+            <button id="btnNon">Non</button>
+        </div>
+
+        <div id="passArea">
+            <input type="text" id="passwordInput" placeholder="Ton code secret...">
+            <div id="errorMsg" class="error">C'est pas ça, mon ange... 🌹</div>
+            
+            <button id="btnValider">Entrer</button>
+            <a href="https://drive.google.com/drive/folders/1eAoF7xX0nJFTbfM0vqU0z0TPxVwZGB7M" id="driveLink" class="final-link">Ouvrir le Drive 📂</a>
+        </div>
+    </div>
+
+    <script>
+        const btnNon = document.getElementById('btnNon');
+        const btnOui = document.getElementById('btnOui');
+        const btnGroup = document.getElementById('btnGroup');
+        const passArea = document.getElementById('passArea');
+        const question = document.getElementById('question');
+        const passwordInput = document.getElementById('passwordInput');
+        const btnValider = document.getElementById('btnValider');
+        const driveLink = document.getElementById('driveLink');
+        const errorMsg = document.getElementById('errorMsg');
+
+        btnNon.addEventListener('mouseover', () => {
+            const x = Math.random() * (window.innerWidth - 150) - (window.innerWidth / 2);
+            const y = Math.random() * (window.innerHeight - 150) - (window.innerHeight / 2);
+            btnNon.style.position = 'fixed';
+            btnNon.style.left = '50%'; btnNon.style.top = '50%';
+            btnNon.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        btnOui.onclick = () => {
+            btnGroup.style.display = 'none';
+            question.innerText = "Code secret ma belle 😌";
+            passArea.style.display = 'block';
+        };
+
+        function launchConfetti() {
+            for (let i = 0; i < 60; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-10px';
+                c.style.backgroundColor = ['#ff4d6d', '#ffcad4', '#ffd700'][Math.floor(Math.random() * 3)];
+                c.style.animationDuration = (Math.random() * 1.5 + 1) + 's';
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 2500);
+            }
+        }
+
+        btnValider.onclick = () => {
+            const mdp = passwordInput.value.toLowerCase().trim();
+            if (mdp === "mon ange") {
+                errorMsg.style.display = 'none';
+                question.innerText = "Accès autorisé 😎";
+                launchConfetti();
+                
+                btnValider.style.display = 'none';
+                passwordInput.style.display = 'none';
+                driveLink.style.display = 'block';
+
+                // Redirection ultra rapide
+                setTimeout(() => {
+                    window.location.href = "https://drive.google.com/drive/folders/1eAoF7xX0nJFTbfM0vqU0z0TPxVwZGB7M";
+                }, 600); 
+            } else {
+                errorMsg.style.display = 'block';
+                passwordInput.value = "";
+            }
+        };
+
+        // Permet de valider avec la touche "Entrée" du clavier pour aller encore plus vite
+        passwordInput.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                btnValider.click();
+            }
+        });
+    </script>
+</body>
+</html>
